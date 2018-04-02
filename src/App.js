@@ -1,6 +1,8 @@
 import React from 'react';
 import { GoogleLogin, GoogleLogout } from 'react-google-login';
 import axios from 'axios';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import RaisedButton from 'material-ui/RaisedButton';
 import './css/app.css';
 
 export default class App extends React.Component {
@@ -13,11 +15,24 @@ export default class App extends React.Component {
 
     render() {
         const activeState = this.state.token ? (
-            <div className='main-container'>
-                <GoogleLogout
-                    buttonText="Logout"
-                    onLogoutSuccess={this.logout}
-                />
+            <div>
+                <div className='main-container'>
+                    <GoogleLogout
+                        buttonText="Logout"
+                        onLogoutSuccess={this.logout}
+                    />
+                </div>
+                <div className='three-button--container'>
+                    <div className='item'>
+                        <RaisedButton label="Table" primary={true} />
+                    </div>
+                    <div className='item'>
+                        <RaisedButton label="Create" primary={true} />
+                    </div>
+                    <div className='item'>
+                        <RaisedButton label="Update" primary={true} />
+                    </div>
+                </div>
             </div>
         ) : (
             <div className='main-container'>
@@ -31,7 +46,9 @@ export default class App extends React.Component {
         )
         return(
             <div>
-                {activeState}
+                <MuiThemeProvider>
+                    {activeState}
+                </MuiThemeProvider>
             </div>
         )
     }

@@ -1,5 +1,20 @@
+body {
+    font-family: 'Roboto', sans-serif;
+}
 .main-container {
     justify-content: center;
     display: flex;
     padding: 20px;
+}
+
+.three-button--container {
+    display: flex;
+    flex-direction: row;
+    padding: 50px;
+}
+
+.item {
+    display: flex;
+    flex-grow: 1;
+    justify-content: center;
 }
