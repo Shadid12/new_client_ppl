@@ -16,7 +16,8 @@ export default class Table extends React.Component {
         this.state = {
             contacts: [],
             current: {},
-            open: false
+            open: false,
+            data: []
         };
 
     }
@@ -89,7 +90,7 @@ export default class Table extends React.Component {
               label="Delete"
               primary={true}
               keyboardFocused={true}
-              onClick={this.handleClose}
+              onClick={this.delete}
             />,
         ];
 
@@ -141,5 +142,16 @@ export default class Table extends React.Component {
     
     handleClose = () => {
         this.setState({open: false});
+    };
+
+    delete = () => {
+
+        axios.delete(
+            `https://people.googleapis.com/v1/${this.state.current.id}:deleteContact`
+        ).then((res) => {
+            this.setState({open: false});
+            this.props.reload();
+            console.log(res);
+        });
     };
 }

@@ -46,7 +46,7 @@ export default class App extends React.Component {
 
         const table = this.state.tableVisible ? (
             <div className='table-container'>
-                <Table token={this.state.token}/>
+                <Table token={this.state.token} reload={this.reloadTable}/>
             </div>
         ) : 
         null;
@@ -65,9 +65,6 @@ export default class App extends React.Component {
                     </div>
                     <div className='item'>
                         <RaisedButton label="Create" primary={true} onClick={this.openCreate} />
-                    </div>
-                    <div className='item'>
-                        <RaisedButton label="Update" primary={true} />
                     </div>
                 </div>
                 <Dialog
@@ -209,6 +206,11 @@ export default class App extends React.Component {
         });
     }
 
+    reloadTable = () => {
+        this.setState({tableVisible: !this.state.tableVisible});
+        this.setState({tableVisible: !this.state.tableVisible});
+    }
+
 }
 
 const responseGoogle = (response) => {
@@ -219,53 +221,4 @@ const responseGoogle = (response) => {
     else{
         console.log('Could not authorize');
     }
-
-
-    // Get contacts
-
-    // let config = {
-    //     headers: {'Authorization': "Bearer " + response.accessToken}
-    // }
-    // axios.get(
-    //     'https://people.googleapis.com/v1/people/me/connections?personFields=names,birthdays,genders',
-    //     config
-    // )
-    //   .then((res) => {
-    //       console.log(res);
-    // });
-
-    // Create Contacts
-    // let body = {
-    //     "birthdays": [
-    //       {
-    //         "text": 
-    //       }
-    //     ],
-    //     "names": [
-    //       {
-    //         "displayName": "",
-    //         "givenName": "shadid"
-    //       }
-    //     ],
-    //     "genders": [
-    //       {
-    //         "value": "male"
-    //       } 
-    //     ]
-    // }
-    // axios.post(
-    //     'https://people.googleapis.com/v1/people:createContact',
-    //     body
-    // )
-    //   .then((res) => {
-    //       console.log(res);
-    // });
-
-    // Delete Request 
-    // let toDel = 'people/c6704325163392934554'
-    // axios.delete(
-    //     `https://people.googleapis.com/v1/${toDel}:deleteContact`
-    // ).then((res) => {
-    //     console.log(res);
-    // })
 }
