@@ -7,6 +7,7 @@ import FlatButton from 'material-ui/FlatButton';
 import Dialog from 'material-ui/Dialog';
 import TextField from 'material-ui/TextField';
 import DatePicker from 'material-ui/DatePicker';
+import Table from './Table';
 import './css/app.css';
 
 export default class App extends React.Component {
@@ -22,7 +23,8 @@ export default class App extends React.Component {
             open: false,
             name: '',
             gender: '',
-            date: minDate
+            date: minDate,
+            tableVisible: true
         }
     }
 
@@ -42,6 +44,13 @@ export default class App extends React.Component {
             />,
         ];
 
+        const table = this.state.tableVisible ? (
+            <div className='table-container'>
+                <Table token={this.state.token}/>
+            </div>
+        ) : 
+        null;
+
         const activeState = this.state.token ? (
             <div>
                 <div className='main-container'>
@@ -52,7 +61,7 @@ export default class App extends React.Component {
                 </div>
                 <div className='three-button--container'>
                     <div className='item'>
-                        <RaisedButton label="Table" primary={true}/>
+                        <RaisedButton label="Table" primary={true} onClick={this.showTable}/>
                     </div>
                     <div className='item'>
                         <RaisedButton label="Create" primary={true} onClick={this.openCreate} />
@@ -89,6 +98,7 @@ export default class App extends React.Component {
                         />
                     </div>
                 </Dialog>
+                {table}
             </div>
         ) : (
             <div className='main-container'>
@@ -143,6 +153,10 @@ export default class App extends React.Component {
     onDateChange = (event, date) => {
         console.log(date);
         this.setState({date: date});
+    }
+
+    showTable = () => {
+        this.setState({tableVisible: !this.state.tableVisible});
     }
 
     handleSubmit = () => {

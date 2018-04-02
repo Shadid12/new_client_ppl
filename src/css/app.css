@@ -18,3 +18,7 @@ body {
     flex-grow: 1;
     justify-content: center;
 }
+
+.table-container {
+    padding: 20px;
+}
