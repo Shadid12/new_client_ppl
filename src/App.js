@@ -3,17 +3,36 @@ import { GoogleLogin, GoogleLogout } from 'react-google-login';
 import axios from 'axios';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import RaisedButton from 'material-ui/RaisedButton';
+import FlatButton from 'material-ui/FlatButton';
+import Dialog from 'material-ui/Dialog';
+import TextField from 'material-ui/TextField';
+import DatePicker from 'material-ui/DatePicker';
 import './css/app.css';
 
 export default class App extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-            token : ''
+            token : '',
+            open: false
         }
     }
 
     render() {
+
+        const actions = [
+            <FlatButton
+              label="Cancel"
+              primary={true}
+              onClick={this.handleClose}
+            />,
+            <FlatButton
+              label="Discard"
+              primary={true}
+              onClick={this.handleClose}
+            />,
+        ];
+
         const activeState = this.state.token ? (
             <div>
                 <div className='main-container'>
@@ -24,15 +43,35 @@ export default class App extends React.Component {
                 </div>
                 <div className='three-button--container'>
                     <div className='item'>
-                        <RaisedButton label="Table" primary={true} />
+                        <RaisedButton label="Table" primary={true}/>
                     </div>
                     <div className='item'>
-                        <RaisedButton label="Create" primary={true} />
+                        <RaisedButton label="Create" primary={true} onClick={this.openCreate} />
                     </div>
                     <div className='item'>
                         <RaisedButton label="Update" primary={true} />
                     </div>
                 </div>
+                <Dialog
+                    actions={actions}
+                    modal={false}
+                    open={this.state.open}
+                    onRequestClose={this.handleClose}
+                    autoScrollBodyContent={true}
+                >
+                    <div>
+                        <div>Create a new Contact</div>
+                        <TextField
+                            hintText="Name"
+                            floatingLabelText="Name"
+                        /><br />
+                        <TextField
+                            hintText="Gender"
+                            floatingLabelText="Gender"
+                        /><br />
+                        <DatePicker hintText="Birthday" />
+                    </div>
+                </Dialog>
             </div>
         ) : (
             <div className='main-container'>
@@ -64,6 +103,14 @@ export default class App extends React.Component {
 
     logout = () => {
         this.setState({ token: '' });
+    }
+
+    openCreate = () => {
+        this.setState({open: true});
+    }
+
+    handleClose = () => {
+        this.setState({open: false});
     }
 
 }
