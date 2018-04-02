@@ -8,6 +8,8 @@ import Dialog from 'material-ui/Dialog';
 import TextField from 'material-ui/TextField';
 import DatePicker from 'material-ui/DatePicker';
 import Table from './Table';
+
+import data from './data.json';
 import './css/app.css';
 
 export default class App extends React.Component {
@@ -100,7 +102,7 @@ export default class App extends React.Component {
         ) : (
             <div className='main-container'>
                 <GoogleLogin
-                    clientId="1043178444240-fit0566r45gcbvog4tei1pour1ba436t.apps.googleusercontent.com"
+                    clientId={data.key}
                     buttonText="Authorize"
                     scope="https://www.googleapis.com/auth/contacts"
                     onSuccess={this.responseGoogle}
