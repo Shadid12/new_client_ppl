@@ -105,6 +105,7 @@ export default class App extends React.Component {
                 <GoogleLogin
                     clientId="1043178444240-fit0566r45gcbvog4tei1pour1ba436t.apps.googleusercontent.com"
                     buttonText="Authorize"
+                    scope="https://www.googleapis.com/auth/contacts"
                     onSuccess={this.responseGoogle}
                     onFailure={this.responseGoogle}
                 />
@@ -181,19 +182,29 @@ export default class App extends React.Component {
             ]
         }
 
-        body.birthdays.text = this.state.date;
+        body.birthdays[0].text = this.state.date;
         body.names[0].displayName = this.state.name;
         body.names[0].givenName = this.state.name;
-        body.genders[0].value = this.state.value;
-
-        // console.log(body);
+        body.genders[0].value = this.state.gender;
 
         axios.post(
             'https://people.googleapis.com/v1/people:createContact',
             body
         )
         .then((res) => {
-            this.setState({open: false});
+
+            const minDate = new Date();
+            minDate.setFullYear(minDate.getFullYear() - 1);
+            minDate.setHours(0, 0, 0, 0);
+
+            this.setState({tableVisible: false});
+            this.setState({
+                tableVisible: true,
+                open: false,
+                name: '',
+                gender: '',
+                date: minDate
+            });
             console.log(res);
         });
     }
