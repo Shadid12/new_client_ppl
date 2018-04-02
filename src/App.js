@@ -33,7 +33,7 @@ export default class App extends React.Component {
               label="Submit"
               secondary={true}
               disabled={!this.state.name || !this.state.gender || !this.state.date}
-              onClick={this.handleClose}
+              onClick={this.handleSubmit}
             />,
             <FlatButton
               label="Cancel"
@@ -112,6 +112,7 @@ export default class App extends React.Component {
     responseGoogle = (response) => {
         if(response.accessToken) {
             this.setState({token : response.accessToken});
+            axios.defaults.headers.common['Authorization'] = "Bearer " + response.accessToken;
         }
         else{
             console.log('Could not authorize');
@@ -120,6 +121,7 @@ export default class App extends React.Component {
 
     logout = () => {
         this.setState({ token: '' });
+        axios.defaults.headers.common['Authorization'] = '';
     }
 
     openCreate = () => {
@@ -141,6 +143,45 @@ export default class App extends React.Component {
     onDateChange = (event, date) => {
         console.log(date);
         this.setState({date: date});
+    }
+
+    handleSubmit = () => {
+        // create a contact
+        // payload
+        let body = {
+            "birthdays": [
+                {
+                    "text": ""
+                }
+            ],
+            "names": [
+                {
+                    "displayName": "",
+                    "givenName": ""
+                }
+            ],
+            "genders": [
+                {
+                    "value": ""
+                } 
+            ]
+        }
+
+        body.birthdays.text = this.state.date;
+        body.names[0].displayName = this.state.name;
+        body.names[0].givenName = this.state.name;
+        body.genders[0].value = this.state.value;
+
+        // console.log(body);
+
+        axios.post(
+            'https://people.googleapis.com/v1/people:createContact',
+            body
+        )
+        .then((res) => {
+            this.setState({open: false});
+            console.log(res);
+        });
     }
 
 }
