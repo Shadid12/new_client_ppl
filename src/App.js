@@ -12,9 +12,17 @@ import './css/app.css';
 export default class App extends React.Component {
     constructor(props){
         super(props);
+
+        const minDate = new Date();
+        minDate.setFullYear(minDate.getFullYear() - 1);
+        minDate.setHours(0, 0, 0, 0);
+
         this.state = {
             token : '',
-            open: false
+            open: false,
+            name: '',
+            gender: '',
+            date: minDate
         }
     }
 
@@ -22,12 +30,13 @@ export default class App extends React.Component {
 
         const actions = [
             <FlatButton
-              label="Cancel"
-              primary={true}
+              label="Submit"
+              secondary={true}
+              disabled={!this.state.name || !this.state.gender || !this.state.date}
               onClick={this.handleClose}
             />,
             <FlatButton
-              label="Discard"
+              label="Cancel"
               primary={true}
               onClick={this.handleClose}
             />,
@@ -64,12 +73,20 @@ export default class App extends React.Component {
                         <TextField
                             hintText="Name"
                             floatingLabelText="Name"
+                            value={this.state.name}
+                            onChange={this.onNameChange}
                         /><br />
                         <TextField
                             hintText="Gender"
                             floatingLabelText="Gender"
+                            value={this.state.gender}
+                            onChange={this.onGenderChange}
                         /><br />
-                        <DatePicker hintText="Birthday" />
+                        <DatePicker 
+                            hintText="Birthday"
+                            defaultDate={this.state.date}
+                            onChange={this.onDateChange}
+                        />
                     </div>
                 </Dialog>
             </div>
@@ -113,6 +130,19 @@ export default class App extends React.Component {
         this.setState({open: false});
     }
 
+    onNameChange = (event) => {
+        this.setState({name: event.target.value});
+    }
+
+    onGenderChange = (event) => {
+        this.setState({gender: event.target.value});
+    }
+
+    onDateChange = (event, date) => {
+        console.log(date);
+        this.setState({date: date});
+    }
+
 }
 
 const responseGoogle = (response) => {
@@ -142,11 +172,7 @@ const responseGoogle = (response) => {
     // let body = {
     //     "birthdays": [
     //       {
-    //         "date": {
-    //           "day": 1,
-    //           "month": 7,
-    //           "year": 96
-    //         }
+    //         "text": 
     //       }
     //     ],
     //     "names": [
