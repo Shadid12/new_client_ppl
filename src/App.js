@@ -16,6 +16,11 @@ export default class App extends React.Component {
     constructor(props){
         super(props);
 
+        /**
+         * Create a date object
+         * this will be default date in the birthday picker
+         */
+
         const minDate = new Date();
         minDate.setFullYear(minDate.getFullYear() - 1);
         minDate.setHours(0, 0, 0, 0);
@@ -32,13 +37,20 @@ export default class App extends React.Component {
 
     render() {
 
+        /**
+         * Array of button component
+         * We put them in our create contact modal
+         */
+
         const actions = [
+            // fire up the create new contact action
             <FlatButton
               label="Submit"
               secondary={true}
               disabled={!this.state.name || !this.state.gender || !this.state.date}
               onClick={this.handleSubmit}
             />,
+            // exits out of the modal
             <FlatButton
               label="Cancel"
               primary={true}
@@ -46,12 +58,21 @@ export default class App extends React.Component {
             />,
         ];
 
+        /**
+         * table component
+         * can be toggled by clicking the table button
+         **/
         const table = this.state.tableVisible ? (
             <div className='table-container'>
                 <Table token={this.state.token} reload={this.reloadTable}/>
             </div>
         ) : 
-        null;
+        <h3>Click on Table Button to view Table</h3>;
+
+        /**
+         * if user is not signed in show them authorize button
+         * else show them the main view
+         */
 
         const activeState = this.state.token ? (
             <div>
@@ -100,6 +121,7 @@ export default class App extends React.Component {
                 {table}
             </div>
         ) : (
+            // shows the login button when not logged in 
             <div className='main-container'>
                 <GoogleLogin
                     clientId={data.key}
@@ -110,6 +132,8 @@ export default class App extends React.Component {
                 />
             </div>
         )
+        
+        // main div section
         return(
             <div>
                 <MuiThemeProvider>
@@ -119,29 +143,48 @@ export default class App extends React.Component {
         )
     }
 
+    /**
+     * Gets response from google and sets the auth token
+     * 
+     */
     responseGoogle = (response) => {
         if(response.accessToken) {
             this.setState({token : response.accessToken});
             axios.defaults.headers.common['Authorization'] = "Bearer " + response.accessToken;
+            // TODO
+            // save and retrive from local storage
         }
-        else{
+        else {
             console.log('Could not authorize');
         }
     }
 
+    /**
+     * Logs out user
+     */
     logout = () => {
         this.setState({ token: '' });
         axios.defaults.headers.common['Authorization'] = '';
+        // TODO detroy local storage auth token  
     }
 
+    /**
+     * Open the create modal
+     */
     openCreate = () => {
         this.setState({open: true});
     }
 
+    /**
+     * close the modal
+     */
     handleClose = () => {
         this.setState({open: false});
     }
 
+    /**
+     * helpers to count for state change 
+     */
     onNameChange = (event) => {
         this.setState({name: event.target.value});
     }
@@ -159,6 +202,9 @@ export default class App extends React.Component {
         this.setState({tableVisible: !this.state.tableVisible});
     }
 
+    /**
+     * Handle Submit
+     */
     handleSubmit = () => {
         // create a contact
         // payload
@@ -181,11 +227,13 @@ export default class App extends React.Component {
             ]
         }
 
+        // populate the payload object
         body.birthdays[0].text = this.state.date;
         body.names[0].displayName = this.state.name;
         body.names[0].givenName = this.state.name;
         body.genders[0].value = this.state.gender;
 
+        // make the post request
         axios.post(
             'https://people.googleapis.com/v1/people:createContact',
             body
@@ -220,7 +268,7 @@ const responseGoogle = (response) => {
     if(response.accessToken) {
         this.setState({token : response.accessToken});
     }
-    else{
+    else {
         console.log('Could not authorize');
     }
 }

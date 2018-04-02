@@ -80,6 +80,9 @@ export default class Table extends React.Component {
             }
         ]
 
+        /**
+         * Button components for table
+         */
         const actions = [
             <FlatButton
               label="Cancel"
@@ -103,8 +106,13 @@ export default class Table extends React.Component {
 
                     getTdProps = { (state, rowInfo, column, instance) => {
                         return {
+                            
+                            style: {
+                                cursor: "pointer"
+                            },
+
                             onClick: (e, handleOriginal) => {
-                               if(rowInfo.original) {
+                               if(rowInfo) {
                                    this.setState({current: rowInfo.original,  open: true});
                                }
                             }
