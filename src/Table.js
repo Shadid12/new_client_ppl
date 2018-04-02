@@ -2,6 +2,10 @@ import React from 'react';
 import { render } from 'react-dom';
 import ReactTable from 'react-table';
 import axios from 'axios';
+import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton';
+import TextField from 'material-ui/TextField';
+
 import 'react-table/react-table.css'
 
 export default class Table extends React.Component {
@@ -10,7 +14,9 @@ export default class Table extends React.Component {
         super(props);
 
         this.state = {
-            contacts: []
+            contacts: [],
+            current: {},
+            open: false
         };
 
     }
@@ -73,6 +79,19 @@ export default class Table extends React.Component {
             }
         ]
 
+        const actions = [
+            <FlatButton
+              label="Cancel"
+              primary={true}
+              onClick={this.handleClose}
+            />,
+            <FlatButton
+              label="Delete"
+              primary={true}
+              keyboardFocused={true}
+              onClick={this.handleClose}
+            />,
+        ];
 
         return(
             <div>
@@ -84,17 +103,43 @@ export default class Table extends React.Component {
                     getTdProps = { (state, rowInfo, column, instance) => {
                         return {
                             onClick: (e, handleOriginal) => {
-                                console.log('A Td Element was clicked!')
-                                console.log('it produced this event:', e)
-                                console.log('It was in this column:', column)
-                                console.log('It was in this row:', rowInfo)
-                                console.log('It was in this table instance:', instance)
+                               if(rowInfo.original) {
+                                   this.setState({current: rowInfo.original,  open: true});
+                               }
                             }
                         }
                         }
                     }
                 />
+                <Dialog
+                    title="Delete this contact"
+                    actions={actions}
+                    modal={false}
+                    open={this.state.open}
+                    onRequestClose={this.handleClose}
+                >
+                    <TextField
+                        floatingLabelText="Name"
+                        value={this.state.current.name}
+                    /><br />
+                    <TextField
+                        floatingLabelText="Gender"
+                        value={this.state.current.gender}
+                    /><br />
+                    <TextField
+                        floatingLabelText="Birthday"
+                        value={this.state.current.birthdate}
+                    /><br />
+                </Dialog>
             </div>
         )
-    }    
+    }
+    
+    handleOpen = () => {
+        this.setState({open: true});
+      };
+    
+    handleClose = () => {
+        this.setState({open: false});
+    };
 }
