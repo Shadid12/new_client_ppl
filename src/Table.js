@@ -17,7 +17,8 @@ export default class Table extends React.Component {
             contacts: [],
             current: {},
             open: false,
-            data: []
+            data: [],
+            confirmMsg: false
         };
 
     }
@@ -64,6 +65,8 @@ export default class Table extends React.Component {
             
             })
         }
+
+        // defining cols for react-table
         const columns = [
             {
                 Header: 'Name',
@@ -88,6 +91,21 @@ export default class Table extends React.Component {
               label="Cancel"
               primary={true}
               onClick={this.handleClose}
+            />,
+            <FlatButton
+              label="Delete"
+              primary={true}
+              keyboardFocused={true}
+              onClick={ () => { this.setState({ confirmMsg: true, open: false }) } }
+            />,
+        ];
+
+
+        const confirmDeleteActions = [
+            <FlatButton
+              label="Cancel"
+              primary={true}
+              onClick={ () => { this.setState({ confirmMsg: false }) } }
             />,
             <FlatButton
               label="Delete"
@@ -120,12 +138,14 @@ export default class Table extends React.Component {
                         }
                     }
                 />
+                {/* info for this contact Modal */}
                 <Dialog
-                    title="Delete this contact"
+                    title="Contact info"
                     actions={actions}
-                    modal={false}
+                    modal={true}
                     open={this.state.open}
                     onRequestClose={this.handleClose}
+                    autoScrollBodyContent={true}
                 >
                     <TextField
                         floatingLabelText="Name"
@@ -139,6 +159,17 @@ export default class Table extends React.Component {
                         floatingLabelText="Birthday"
                         value={this.state.current.birthdate}
                     /><br />
+                </Dialog>
+                {/* confirmation  */}
+                <Dialog
+                    title="Are you Sure you want to delete this contact"
+                    actions={confirmDeleteActions}
+                    modal={true}
+                    open={this.state.confirmMsg}
+                    onRequestClose={this.handleClose}
+                    autoScrollBodyContent={true}
+                >
+
                 </Dialog>
             </div>
         )
@@ -157,7 +188,7 @@ export default class Table extends React.Component {
         axios.delete(
             `https://people.googleapis.com/v1/${this.state.current.id}:deleteContact`
         ).then((res) => {
-            this.setState({open: false});
+            this.setState({open: false, confirmMsg: false });
             this.props.reload();
             console.log(res);
         });

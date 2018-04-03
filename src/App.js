@@ -256,6 +256,10 @@ export default class App extends React.Component {
         });
     }
 
+    /**
+     * reloads table after UI interaction triggers
+     * data changes
+     */
     reloadTable = () => {
         this.setState({tableVisible: !this.state.tableVisible});
         this.setState({tableVisible: !this.state.tableVisible});
@@ -263,6 +267,10 @@ export default class App extends React.Component {
 
 }
 
+/**
+ * function catches the token from google auth
+ * @param {Object} response
+ */
 const responseGoogle = (response) => {
     axios.defaults.headers.common['Authorization'] = "Bearer " + response.accessToken;
     if(response.accessToken) {
